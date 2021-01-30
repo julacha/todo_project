@@ -1,0 +1,4 @@
+RewriteEngine on
+
+RewriteCond %{REQUEST_URI} !^/todo_project/public/
+RewriteRule (.*) /todo_project/public/$1 [L]
