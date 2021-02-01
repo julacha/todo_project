@@ -1,4 +1,3 @@
-  
 /** @format */
 'use strict';
 
@@ -162,4 +161,28 @@ $.ajax({
       todo.addTask(tasks[i].text, tasks[i].status);
     }
   }
-})
+});
+
+//-------------
+function counter(n) {
+  setTimeout(function () {
+    console.log(n);
+    if (n < 10) {
+      counter(n + 1);
+    }
+  }, 1000);
+}
+counter(1);
+
+
+for (let i = 1; i <= 10; i++) {
+  console.log(i);
+}
+
+function echo(i) {
+  console.log("recursive_" + i);
+  if (i < 20) {
+    echo(i + 1);
+  }
+}
+echo(11);
