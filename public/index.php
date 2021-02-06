@@ -3,17 +3,16 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-const BASE_URL = "http://localhost/todo_project/";
+const BASE_URL = "http://localhost/";
 
-function get_url($path =""){
-    echo BASE_URL . $path; 
+function get_url($path = "") {
+    echo BASE_URL . $path;
 }
-//---
+
 $sid = "000";
 
-$base_url = "";
 session_start();
-$page_name = 'acces_denied';
+$page_name = 'access_denied';
 
 if (isset($_SESSION['username'], $_SESSION['password']) &&
     $_SESSION['username'] === 'julia' &&
@@ -31,7 +30,10 @@ if (isset($_SESSION['username'], $_SESSION['password']) &&
         }
         elseif ($_GET['page'] === "test_request") {
             $page_name = "test_request";
-        }
+        }  
+        elseif ($_GET['page'] === "db_test") {
+            $page_name = "db_test";
+        }     
         else {
             $page_name = "page404";
         }
@@ -43,18 +45,17 @@ if (isset($_SESSION['username'], $_SESSION['password']) &&
 elseif (isset($_GET['page']) && $_GET['page'] === "authenticate") {
     include "../bootcamp_app/actions/authenticate.php";
 }
-else{
-    if(isset($_GET['page'])){
+else {
+    if (isset($_GET['page'])) {
         if ($_GET['page'] === "login") {
-        $page_name = "login";
+            $page_name = "login";
+        }
     }
-}
-else{
-    header("Location:index.php?page=login");
-}
+    else {
+        header("Location: index.php?page=login");
+    }
 
     //$page_name = "access_denied";
 }
-include "../bootcamp_app/pages/" . $page_name . ".php";
 
-?>
+include "../bootcamp_app/pages/" . $page_name . ".php";

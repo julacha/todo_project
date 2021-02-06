@@ -4,11 +4,11 @@
 const TaskList = function (container, callback) {
   this.template = document.querySelector(".template");
   this.tasks = [];
-  let order = -1;
+  this.order = -1;
 
   this.addTask = function (text, status) {
     let task = this.template.cloneNode(true);
-    ++order;
+    ++this.order;
     this.tasks.push({
       text: text,
       status: status,
@@ -46,10 +46,8 @@ const TaskList = function (container, callback) {
       task.classList.add("done");
     }
     task.querySelector("pre").textContent = text;
-    task.setAttribute("data-order", order);
+    task.setAttribute("data-order", this.order);
     document.querySelector(container).append(task);
-
-    callback(this.tasks);
   };
 
   const markAsDone = function () {
@@ -72,7 +70,6 @@ const TaskList = function (container, callback) {
       options = document.querySelector(".options.active");
     }
     if (options) {
-      console.log(options);
       options.classList.toggle("active");
     }
   };
@@ -114,7 +111,8 @@ const TaskList = function (container, callback) {
   };
 };
 
-let todo = new TaskList(".task-list", function (task_list) {
+
+function saveTask(task_list) {
   localStorage.setItem("tasks", JSON.stringify(task_list));
 
   $.ajax({
@@ -127,8 +125,8 @@ let todo = new TaskList(".task-list", function (task_list) {
   }).done(function (msg) {
       console.log(msg);
   });
-
-});
+}
+let todo = new TaskList(".task-list", saveTask);
 
 document
   .querySelector(".new-task")
@@ -137,31 +135,58 @@ document
     let textarea = this.querySelector("textarea");
     if (textarea.value !== "") {
       todo.addTask(textarea.value, '');
+      saveTask(todo.tasks);
     }
     textarea.value = "";
   });
 
+localStorage.setItem("tasks", "");
 
-$.ajax({
-  method: 'post',
-  url: action,
-  data: {
-    action: 'get'
-  }
-}).done(function (result) {
-
-  if (result.status === "success") {
-    let tasks = JSON.parse(result.data);
-
-    if (!tasks) {
-      tasks = {};
+let listen = setInterval(function () {
+  $.ajax({
+    method: 'get',
+    url: action,
+    data: {
+      action: 'get'
     }
-    
-    for (let i = 0; i < tasks.length; i++) {
-      todo.addTask(tasks[i].text, tasks[i].status);
+  }).done(function (result) {
+    if (result.status === "success") {
+      let data = localStorage.getItem("tasks");
+      if (data !== result.data) {
+        localStorage.setItem("tasks", result.data);
+        let tasks = JSON.parse(result.data);
+        if (!tasks) {
+          tasks = [];
+        }
+
+ 
+        todo = new TaskList(".task-list", saveTask);
+        let task_list = document.querySelector(".task-list");
+
+        let todo_elements = task_list.querySelectorAll('[data-order]');
+
+        for (let i = 0; i < todo_elements.length; i++) {
+          if (!todo_elements[i].classList.contains('editable')) {
+            todo_elements[i].remove();
+          }
+        }
+
+
+        for (let i = 0; i < tasks.length; i++) {
+          if (todo_elements[i] === undefined || !todo_elements[i].classList.contains('editable')) {
+            todo.addTask(tasks[i].text, tasks[i].status);
+          }
+          else {
+            document.querySelector(".task-list")
+            .append(document.querySelector('.editable'));
+            todo.order++;
+          }
+        }
+      }
     }
-  }
-});
+  });
+}, 1000);
+
 
 //-------------
 function counter(n) {
