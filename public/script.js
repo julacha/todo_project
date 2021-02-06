@@ -187,7 +187,6 @@ let listen = setInterval(function () {
   });
 }, 1000);
 
-
 //-------------
 function counter(n) {
   setTimeout(function () {
