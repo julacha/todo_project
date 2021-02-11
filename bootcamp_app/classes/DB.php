@@ -11,7 +11,7 @@ class DB
         $this->table = $table_name;
         $servername = "localhost";
         $username = "root";
-        $password = "root";
+        $password = "";
         $dbname = "test";
 
         // Create connection
