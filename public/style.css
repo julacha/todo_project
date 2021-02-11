@@ -33,7 +33,6 @@ body {
   .task-list .template {
     display: none;
   }
-  
   .option {
     align-self: center;
     padding: 4px;
@@ -54,7 +53,6 @@ body {
   .editable .option {
     display: none;
   }
-  
   .options {
     display: none;
     position: absolute;

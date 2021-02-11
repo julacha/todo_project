@@ -1,28 +1,16 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "cars";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
+include "../bootcamp_app/classes/Cars.php";
+include "../bootcamp_app/classes/Todo.php";
 
-echo "Db connected";
+$cars = new Cars('cars');
+//$cars->setData();
+$cars->update(2, ['color' => 'orange', 'model' => "shkoda"]);
+echo $cars->last_message;
+$cars->get();
+echo $cars->last_message;
 
-
-$sql = "SELECT id, model, color FROM cars";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-  // output data of each row
-  while ($row = $result->fetch_assoc()) {
-    echo "id: " . $row["id"] . " - Name: " . $row["model"] . " " . $row["color"] . "<br>";
-  }
-} else {
-  echo "0 results";
-}
-$conn->close();
+$todo = new Todo('todo-tasks');
+//$todo->setData();
+$todo->get();
+echo $cars->last_message;
